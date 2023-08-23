@@ -4,6 +4,7 @@ import { ContextUser } from './Context/StateUsersGlobals'
 import Signin from './Login/Signin'
 import Sidebar from './Sidebar/Sidebar'
 import { Container, Row, Col } from 'react-bootstrap'
+import Media from './MediaManagement/MediaManagement'
 
 
 function App1(props) {
@@ -16,7 +17,7 @@ function App1(props) {
             <Col sm={9}>
               <Routes>
                 <Route path="/Login" element={<Signin />} />
-               
+                <Route path="/gestionar-medios" element={<Media />} />
               </Routes>
             </Col>
           </Row>

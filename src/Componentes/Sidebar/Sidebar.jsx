@@ -10,7 +10,11 @@ import MyModal from '../Modal/Modal'
 import { useNavigate } from 'react-router-dom';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import ListGroup from 'react-bootstrap/ListGroup';
-
+import { BsMapFill } from 'react-icons/bs';
+import {BsFillUsbDriveFill} from 'react-icons/bs';
+import {BsFillFileEarmarkFill} from 'react-icons/bs';
+import {BsFillHddStackFill} from 'react-icons/bs';
+import {BsGraphUp} from 'react-icons/bs';
 
 function Sidebar() {
 
@@ -47,25 +51,24 @@ function Sidebar() {
     <ul className="list-unstyled ps-0 " >
       <li className="mb-1">
         <button className="btn btn-toggle align-items-center rounded " style={{ color: 'blue' }} data-bs-toggle="collapse" data-bs-target="#dashboard-collapse1" aria-expanded="false">
-          Menu
+          Gestión de Medios
         </button>
         <div className="collapse mt-1" id="dashboard-collapse1">
           <ListGroup >
-          <ListGroup.Item action active={activeItem === "Incidencias"} onClick={() => handleItemClick("Incidencias")}>
-            <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}>Incidencias</Link>
-          </ListGroup.Item>
-           <ListGroup.Item action active={activeItem === "Tareas Programadas"} onClick={() => handleItemClick("Tareas Programadas")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}>Tareas Programadas</Link>
+          <ListGroup.Item action active={activeItem === "Gestionar Medios"} onClick={() => handleItemClick("Gestionar Medios")} >
+              <Link to="/gestionar-medios" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillUsbDriveFill /> Gestionar Medios</Link>
             </ListGroup.Item>
-            <ListGroup.Item action active={activeItem === "Comprimir SR-04"} onClick={() => handleItemClick("Comprimir SR-04")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}>Comprimir SR-04</Link>
+          <ListGroup.Item action active={activeItem === "Gestionar Campos"} onClick={() => handleItemClick("Gestionar Campos")} >
+              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillHddStackFill /> Gestionar Campos</Link>
+            </ListGroup.Item>
+            <ListGroup.Item action active={activeItem === "Gestionar Planos"} onClick={() => handleItemClick("Gestionar Planos")} >
+              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}><BsMapFill /> Gestionar Planos</Link>
+            </ListGroup.Item>
+            <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => handleItemClick("Gestionar Categorías")} >
+              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillFileEarmarkFill /> Gestionar Categorías</Link>
             </ListGroup.Item> 
-            <ListGroup.Item action active={activeItem === "Mapa"} onClick={() => handleItemClick("Mapa")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}>Mapa</Link>
-            </ListGroup.Item>
-            <ListGroup.Item action active={activeItem === "Gestionar Medios"} onClick={() => handleItemClick("Gestionar Medios")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}>Gestionar Medios</Link>
-            </ListGroup.Item>
+            
+            
           </ListGroup>
 
         </div>
