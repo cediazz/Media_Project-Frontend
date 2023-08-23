@@ -5,6 +5,7 @@ import Signin from './Login/Signin'
 import Sidebar from './Sidebar/Sidebar'
 import { Container, Row, Col } from 'react-bootstrap'
 import Media from './MediaManagement/MediaManagement'
+import Plan from './PlanManagement/PlanManagement'
 
 
 function App1(props) {
@@ -18,6 +19,7 @@ function App1(props) {
               <Routes>
                 <Route path="/Login" element={<Signin />} />
                 <Route path="/gestionar-medios" element={<Media />} />
+                <Route path="/gestionar-planos" element={<Plan />} />
               </Routes>
             </Col>
           </Row>
