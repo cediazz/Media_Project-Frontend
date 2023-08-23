@@ -7,6 +7,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 import Media from './MediaManagement/MediaManagement'
 import Plan from './PlanManagement/PlanManagement'
 import Category from './CategoryManagement/CategoryManagement'
+import FieldsManagement from './FieldsManagement/FieldsManagement'
+import Field from './Fields/Fields'
 
 
 function App1(props) {
@@ -22,6 +24,8 @@ function App1(props) {
                 <Route path="/gestionar-medios" element={<Media />} />
                 <Route path="/gestionar-planos" element={<Plan />} />
                 <Route path="/gestionar-categoria" element={<Category />} />
+                <Route path="/gestionar-campos" element={<FieldsManagement />} />
+                <Route path="/probar-field" element={<Field />} />
               </Routes>
             </Col>
           </Row>

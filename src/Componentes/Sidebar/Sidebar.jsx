@@ -59,7 +59,7 @@ function Sidebar() {
               <Link to="/gestionar-medios" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillUsbDriveFill /> Gestionar Medios</Link>
             </ListGroup.Item>
           <ListGroup.Item action active={activeItem === "Gestionar Campos"} onClick={() => handleItemClick("Gestionar Campos")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillHddStackFill /> Gestionar Campos</Link>
+              <Link to="/gestionar-campos" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillHddStackFill /> Gestionar Campos</Link>
             </ListGroup.Item>
             <ListGroup.Item action active={activeItem === "Gestionar Planos"} onClick={() => handleItemClick("Gestionar Planos")} >
               <Link to="/gestionar-planos" className="link-dark rounded" style={{textDecoration:"none"}}><BsMapFill /> Gestionar Planos</Link>
