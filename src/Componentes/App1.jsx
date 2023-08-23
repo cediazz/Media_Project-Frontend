@@ -6,6 +6,7 @@ import Sidebar from './Sidebar/Sidebar'
 import { Container, Row, Col } from 'react-bootstrap'
 import Media from './MediaManagement/MediaManagement'
 import Plan from './PlanManagement/PlanManagement'
+import Category from './CategoryManagement/CategoryManagement'
 
 
 function App1(props) {
@@ -20,6 +21,7 @@ function App1(props) {
                 <Route path="/Login" element={<Signin />} />
                 <Route path="/gestionar-medios" element={<Media />} />
                 <Route path="/gestionar-planos" element={<Plan />} />
+                <Route path="/gestionar-categoria" element={<Category />} />
               </Routes>
             </Col>
           </Row>

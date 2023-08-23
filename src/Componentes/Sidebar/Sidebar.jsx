@@ -65,7 +65,7 @@ function Sidebar() {
               <Link to="/gestionar-planos" className="link-dark rounded" style={{textDecoration:"none"}}><BsMapFill /> Gestionar Planos</Link>
             </ListGroup.Item>
             <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => handleItemClick("Gestionar Categorías")} >
-              <Link to="" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillFileEarmarkFill /> Gestionar Categorías</Link>
+              <Link to="/gestionar-categoria" className="link-dark rounded" style={{textDecoration:"none"}}><BsFillFileEarmarkFill /> Gestionar Categorías</Link>
             </ListGroup.Item> 
             
             
