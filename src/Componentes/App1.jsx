@@ -9,6 +9,8 @@ import Plan from './PlanManagement/PlanManagement'
 import Category from './CategoryManagement/CategoryManagement'
 import FieldsManagement from './FieldsManagement/FieldsManagement'
 import Field from './Fields/Fields'
+import InsertMedia from './InsertMedia/InsertMedia'
+import LinkMedia from './ModalLinkMedia/ModalLinkMedia'
 
 
 function App1(props) {
@@ -25,7 +27,8 @@ function App1(props) {
                 <Route path="/gestionar-planos" element={<Plan />} />
                 <Route path="/gestionar-categoria" element={<Category />} />
                 <Route path="/gestionar-campos" element={<FieldsManagement />} />
-                <Route path="/probar-field" element={<Field />} />
+                <Route path="/insertar-medio" element={<InsertMedia />} />
+                <Route path="/probar-modal" element={<LinkMedia />} />
               </Routes>
             </Col>
           </Row>

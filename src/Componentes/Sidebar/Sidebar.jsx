@@ -6,7 +6,6 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import { Link } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Loading from '../Loading/Loading'
-import MyModal from '../Modal/Modal'
 import { useNavigate } from 'react-router-dom';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import ListGroup from 'react-bootstrap/ListGroup';
