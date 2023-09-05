@@ -12,6 +12,7 @@ import Field from './Fields/Fields'
 import InsertMedia from './InsertMedia/InsertMedia'
 import LinkMedia from './ModalLinkMedia/ModalLinkMedia'
 import PlanView from './Plan/Plan'
+import Alert from './Alert/Alert'
 
 
 function App1(props) {
@@ -31,6 +32,7 @@ function App1(props) {
                 <Route path="/insertar-medio" element={<InsertMedia />} />
                 <Route path="/probar-modal" element={<LinkMedia />} />
                 <Route path="/planos" element={<PlanView />} />
+                <Route path="/toast" element={<Alert />} />
               </Routes>
             </Col>
           </Row>
