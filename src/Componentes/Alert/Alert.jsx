@@ -17,7 +17,7 @@ function Alert(props) {
           position='bottom-end'
           style={{ zIndex: 1 }}
         >
-        <Toast onClose={() => setShow(false)} show={show} delay={4000} autohide bg={props.message == "La categoría que intenta insertar ya existe"?'danger':'success'} >
+        <Toast onClose={() => setShow(false)} show={show} delay={4000} autohide bg={props.error == true?'danger':'success'} >
           <Toast.Header>
             <BsFillBellFill />
             <strong className="me-auto"> Resultado</strong>

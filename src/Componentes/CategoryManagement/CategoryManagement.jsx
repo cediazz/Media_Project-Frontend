@@ -12,7 +12,7 @@ import Loading from "../Loading/Loading";
 import InsertCategory from "./insertCategory";
 import Image from 'react-bootstrap/Image';
 import Alert from '../Alert/Alert'
-import ModalDeleteCategory from "../Modal/Modal";
+import ModalDeleteCategory from "../Modal/ModalDeleteCategory";
 import delCategory from "./deleteCategory";
 
 export default function Category() {
@@ -25,7 +25,7 @@ export default function Category() {
   const [image, setImage] = useState()
   const [message, setMessage] = useState()
   const [showModal, setShowModal] = useState(false)
-  
+  const [error, setError] = useState(false)
  
 
   useEffect( ()=>{
@@ -56,7 +56,10 @@ export default function Category() {
       setMessage("Categoría Insertada")
       let categorys = await getCategorys()
       setCategorys(categorys)
-      } else setMessage("La categoría que intenta insertar ya existe")
+      } else {
+        setMessage("La Categoría que intenta insertar ya existe")
+        setError(true)
+        }
       setLoading(false)
 
     }
@@ -128,7 +131,7 @@ export default function Category() {
         {category && <Image src={category.image} thumbnail />}
       </Row>
       <Row>
-        {message && <Alert message={message}></Alert>}
+        {message && <Alert message={message} error={error}></Alert>}
       </Row>
       {showModal == true && <ModalDeleteCategory categoryID={categorySelected} deleteCategory={deleteCategory}  setShowModal={setShowModal} />}
       

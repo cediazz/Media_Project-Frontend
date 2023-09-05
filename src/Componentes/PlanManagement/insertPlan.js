@@ -1,12 +1,13 @@
-export default async function InsertCategory(description,image){
+export default async function InsertPlan(description,image){
    
     let token = localStorage.getItem('access') ? localStorage.getItem('access') : ''
     let data = null
-    
     const uploadData = new FormData()
     uploadData.append('description', description)
     if (image != null)
     uploadData.append('image', image, image.name)
+    uploadData.append('width', "45")
+    uploadData.append('height', "23")
     try {
       let config = {
           method: 'POST',
@@ -17,7 +18,7 @@ export default async function InsertCategory(description,image){
           }*/
           body:uploadData
         }
-        let res = await fetch(`http://127.0.0.1:8000/Categorys/`, config)
+        let res = await fetch(`http://127.0.0.1:8000/Plans/`, config)
         if(res.status == 400){
           data = "fail"
         }

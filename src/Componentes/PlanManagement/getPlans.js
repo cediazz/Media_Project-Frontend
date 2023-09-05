@@ -1,28 +1,20 @@
-export default async function InsertCategory(description,image){
+export default async function getPlans(id = ""){
    
     let token = localStorage.getItem('access') ? localStorage.getItem('access') : ''
     let data = null
-    
-    const uploadData = new FormData()
-    uploadData.append('description', description)
-    if (image != null)
-    uploadData.append('image', image, image.name)
     try {
       let config = {
-          method: 'POST',
-          /*headers: {
+          method: 'GET',
+          headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
            //'Authorization': `Bearer ${token}`
-          }*/
-          body:uploadData
+          }
         }
-        let res = await fetch(`http://127.0.0.1:8000/Categorys/`, config)
-        if(res.status == 400){
-          data = "fail"
-        }
-        else data = await res.json()
-        /* if(res.status == 401){
+        let res = await fetch(`http://127.0.0.1:8000/Plans/${id}`, config)
+        data = await res.json()
+        //console.log(data)
+       /* if(res.status == 401){
           console.log("401")
           let refresToken = localStorage.getItem('refresh') ? localStorage.getItem('refresh') : ''
           let res = await fetch(`http://127.0.0.1:8000/refresh-token/`,{
@@ -46,7 +38,7 @@ export default async function InsertCategory(description,image){
            }
         }*/
         } catch (error) {
-        //console.log(error);
+        console.log(error);
         data = error
       }
     return data
