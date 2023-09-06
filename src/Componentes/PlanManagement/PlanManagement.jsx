@@ -14,6 +14,7 @@ import getPlans from "./getPlans";
 import InsertPlan from "./insertPlan";
 import delPlan from "./deletePlan";
 import ModalDeletePlan from "../Modal/ModalDeletePlan";
+import Map from '../Map/Map'
 
 export default function Plan() {
   const [validated, setValidated] = useState(false);
@@ -87,6 +88,7 @@ export default function Plan() {
   }
 
   return (
+    <>
     <Container className="border mt-5">
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3 mt-3">
@@ -125,13 +127,13 @@ export default function Plan() {
       </div>
       </Row>
       <Row>
-        {plan && <Image src={plan.image} thumbnail />}
-      </Row>
-      <Row>
         {message && <Alert message={message} error={error}></Alert>}
       </Row>
       {showModal == true && <ModalDeletePlan planID={planSelected} deletePlan={deletePlan}  setShowModal={setShowModal} />}
-    </Container>
+     </Container>
+     {plan &&  <Map image={plan.image} />}
+   
+   </>
   );
 
 

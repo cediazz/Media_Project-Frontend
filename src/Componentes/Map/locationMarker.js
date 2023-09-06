@@ -1,0 +1,23 @@
+import React from "react";
+import { useState } from 'react';
+import {Marker,Popup,useMapEvents } from 'react-leaflet'
+import { customIcon } from "./Icon"
+
+export default function LocationMarker() {
+    const [position, setPosition] = useState(null)
+    
+    useMapEvents({
+        click(e) {
+          const { lat, lng } = e.latlng;
+          console.log(lat);
+          console.log(lng);
+          setPosition(e.latlng)
+        },
+      });
+    
+     return position === null ? null : (
+      <Marker position={position} icon={customIcon}>
+        <Popup>You are here</Popup>
+      </Marker>
+    )
+  }
