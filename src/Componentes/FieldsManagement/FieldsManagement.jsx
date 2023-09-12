@@ -1,31 +1,67 @@
 import React from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Loading from "../Loading/Loading";
 import { Container } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { BsFillSignIntersectionFill } from 'react-icons/bs';
+import Alert from '../Alert/Alert'
 import Field from "../Fields/Fields";
+import getAllMedias from "./getAllMedias";
+import InsertField from "./insertField";
 
 
 export default function FieldsManagement() {
   const [validated, setValidated] = useState(false)
-  const [categorySelected, setCategorySelected] = useState("Seleccionar la Categoría")
-  const [fields, setFields] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [mediaSelected, setMediaSelected] = useState("Seleccione el Medio")
+  const [medias, setMedias] = useState([])
+  const [nameField, setNameField] = useState()
+  const [valueField, setValueField] = useState()
+  const [message, setMessage] = useState()
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+
+    const Medias = async () => {
+      setLoading(true)
+      let data = await getAllMedias()
+      setMedias(data)
+      setLoading(false)
+    }
+    Medias()
+
+  }, [])
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(true);
+    }
+    else {
+      setLoading(true)
+      let dataForm = {
+        field: { name: nameField, value: valueField },
+        media: mediaSelected
+      }
+      setMessage()
+      let data = await InsertField(dataForm)
+      if (data != 'fail') {
+        setMessage("Campo Insertado")
+
+      }
+      setLoading(false)
     }
 
-    setValidated(true);
+
   };
 
-  const deleteField = (index) => {
+  /*const deleteField = (index) => {
     //console.log(fields.length)
     //console.log(index)
 
@@ -36,16 +72,9 @@ export default function FieldsManagement() {
     console.log(newFields)
 
 
-  };
+  };*/
 
-  const addFields = () => {
-    //setFields([fields, <Field deleteField={deleteField} index={fields.length}/>]);
-    const fieldss = [...fields]
-    fieldss.push(<Field deleteField={deleteField} index={fields.length} />)
-    setFields(fieldss)
-    //console.log(fields)
 
-  }
 
 
 
@@ -54,32 +83,42 @@ export default function FieldsManagement() {
     <Container className="border mt-5">
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3 mt-3">
-          <Form.Label>Seleccione la Categoría</Form.Label>
-          <Form.Group as={Col} md="4" controlId="validationCustom02">
-
-            <Form.Select aria-label="Default select example" required onChange={e => setCategorySelected(e.target.value)}>
-              <option selected disabled>Seleccionar la Categoría</option>
-              <option >Categorias</option>
-              <option >Two</option>
-              <option >Three</option>
+          <Form.Group as={Col} md="4" controlId="validationCustom01">
+            <Form.Label>Seleccione el Medio</Form.Label>
+            <Form.Select required onChange={e => setMediaSelected(e.target.value)}>
+              <option selected disabled value="">Seleccione el Medio</option>
+              {medias.map((medias) => <option value={medias.id}>{medias.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="validationCustom01">
-            {categorySelected != "Seleccionar la Categoría" && <Button className="mb-3" onClick={addFields} variant="outline-primary"><BsFillSignIntersectionFill /> Adicionar Campos</Button>}
-          </Form.Group>
+
+          {mediaSelected != "Seleccione el Medio" &&
+            <>
+              <Form.Group as={Col} md="4" controlId="validationCustom02">
+                <Form.Label>Nombre del Campo</Form.Label>
+                <Form.Control type="text" required onChange={e => setNameField(e.target.value)} />
+                <Form.Control.Feedback type="invalid">Por favor introduzca el nombre</Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md="4" controlId="validationCustom03">
+                <Form.Label>Valor del Campo</Form.Label>
+                <Form.Control type="text" required onChange={e => setValueField(e.target.value)} />
+                <Form.Control.Feedback type="invalid">Por favor introduzca el valor</Form.Control.Feedback>
+              </Form.Group>
+            </>
+          }
+
         </Row>
         <Row>
-          {fields && fields.map((field, index) => (
-            <Form.Group as={Col} md="4" controlId="validationCustom02">
-              {field}
-            </Form.Group>
-          ))}
+          <Col md="4"></Col><Col md="4"><Button variant="primary" type="submit" ><BsFillSignIntersectionFill /> Agregar Campo</Button></Col><Col md="4"></Col>
         </Row>
 
       </Form>
-
-      {fields.length}
+      <Row className="mt-3">
+        <div style={{ textAlign: "center" }}>
+          {loading && <Loading />}
+        </div>
+      </Row>
+      {message && <Alert message={message} error={error}></Alert>}
     </Container>
 
 

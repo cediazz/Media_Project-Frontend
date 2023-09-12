@@ -1,7 +1,7 @@
 import React from 'react';
 import './mypagination.css';
 import ReactPaginate from 'react-paginate';
-import getCommercialOperations from '../RateControl/getCommercialOperations'
+import getMedias from '../MediaManagement/getMedias';
 
 function MyPagination(props) {
     
@@ -10,11 +10,11 @@ function MyPagination(props) {
     const handlePageChange = async (event) => {
         props.setLoading(true)
         console.log(event)
-        const newActivePage = event.selected + 1;
-        console.log(newActivePage)
-        let data = await getCommercialOperations(props.date,props.province,newActivePage)
+        const page = event.selected + 1;
+        //console.log(newActivePage)
+        let data = await getMedias(page,props.description,props.category,props.plan)
         console.log(data)
-        props.setData(data)
+        props.setMedias(data.results)
         props.setLoading(false)
     };
 
@@ -25,7 +25,7 @@ function MyPagination(props) {
             <ReactPaginate
                 nextLabel={"siguiente"}
                 previousLabel={"anterior"}
-                pageCount={props.cantPag}
+                pageCount={props.pageCount}
                 pageRangeDisplayed={3}
                 marginPagesDisplayed={2}
                 onPageChange={handlePageChange}

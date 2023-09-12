@@ -14,6 +14,9 @@ import LinkMedia from './ModalLinkMedia/ModalLinkMedia'
 import PlanView from './Plan/Plan'
 import Alert from './Alert/Alert'
 import Map from './Map/Map'
+import UpdateMedia from './UpdateMedia/UpdateMedia'
+import MyButtonToolbar from './MediaManagement/ButtonToolbar'
+
 
 
 function App1(props) {
@@ -33,8 +36,9 @@ function App1(props) {
                 <Route path="/insertar-medio" element={<InsertMedia />} />
                 <Route path="/probar-modal" element={<LinkMedia />} />
                 <Route path="/planos" element={<PlanView />} />
-                <Route path="/toast" element={<Alert />} />
-                <Route path="/mapa" element={<Map />} />
+                <Route path="/button-toolbar" element={<MyButtonToolbar />} />
+                <Route path="/detalles-medio" element={<UpdateMedia />} />
+              
               </Routes>
             </Col>
           </Row>
