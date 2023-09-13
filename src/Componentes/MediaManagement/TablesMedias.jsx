@@ -20,12 +20,14 @@ function TableMedias(props) {
         <td>{media.description}</td>
         <MyButtonToolbar 
         mediaID={media.id} 
-        mediaDescription={media.description} 
+        mediaDescription={media.description}
+        categoryID={media.category.id} 
         categoryDescription={media.category.description}
         planID={media.plan.id}
         planDescription={media.plan.description}
         planImage={media.plan.image}
-        coordinadas={{lat:media.coordinadas.lat,lng:media.coordinadas.lng}} 
+        coordinadas={{lat:media.coordinadas.lat,lng:media.coordinadas.lng}}
+        deleteMedia={props.deleteMedia} 
         />
         <td></td></tr> )}
       </tbody>

@@ -16,7 +16,7 @@ export default function Field(props) {
   return (
 
     <InputGroup className="mb-3">
-      <Form.Control required type="text" value={props.value} />
+      <Form.Control readOnly={true} required type="text" value={props.value} />
       <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltipEdit}>
         <Button variant="primary" ><BsPencilSquare /></Button>
       </OverlayTrigger>

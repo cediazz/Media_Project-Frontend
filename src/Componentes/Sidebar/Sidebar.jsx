@@ -15,12 +15,14 @@ import { BsFillFileEarmarkFill } from 'react-icons/bs';
 import { BsFillHddStackFill } from 'react-icons/bs';
 import { BsGraphUp } from 'react-icons/bs';
 
+
 function Sidebar() {
 
   const [loggedIn, setLoggedIn] = useState(true); // Estado para comprobar si el usuario está logeado
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false)
   const [activeItem, setActiveItem] = useState("");
+  const navigate = useNavigate();
 
 
 
@@ -69,11 +71,11 @@ function Sidebar() {
                 <BsMapFill /> Gestionar Planos
               </ListGroup.Item>
               </Link>
-              <Link to="/gestionar-categoria" className="link-dark rounded" style={{ textDecoration: "none" }}>
-              <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => handleItemClick("Gestionar Categorías")} >
+              
+              <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => {handleItemClick("Gestionar Categorías") ; navigate("/gestionar-categoria")}} >
                 <BsFillFileEarmarkFill /> Gestionar Categorías
               </ListGroup.Item>
-              </Link>
+              
             </ListGroup>
 
           </div>

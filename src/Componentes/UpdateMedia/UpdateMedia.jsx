@@ -14,6 +14,7 @@ import Map from '../Map/Map'
 import { useLocation } from 'react-router-dom';
 import getMediaFields from './getMediaFields';
 import Field from '../Fields/Fields';
+import UpdateMedias from './updateMedia';
 
 function UpdateMedia() {
 
@@ -23,15 +24,15 @@ function UpdateMedia() {
     const [plans, setPlans] = useState([])
     const [category, setCategory] = useState()
     const [categorys, setCategorys] = useState([])
-    const [categorySelected, setCategorySelected] = useState("Seleccione la Categoría")
-    const [coordinadas, setCoordinadas] = useState()
-    const [description, setDescription] = useState()
     const [message, setMessage] = useState()
     const [error, setError] = useState(false)
     const location = useLocation();
-    const [mediaData,setMediaData] = useState(location.state || {})
+    const [mediaData, setMediaData] = useState(location.state || {})
     const [mediaFields, setMediaFields] = useState([])
     const [planSelected, setPlanSelected] = useState(mediaData.planID)
+    const [categorySelected, setCategorySelected] = useState(mediaData.catID)
+    const [description, setDescription] = useState(mediaData.description)
+    const [coordinadas, setCoordinadas] = useState(mediaData.coordinadas)
 
 
     useEffect(() => {
@@ -57,12 +58,12 @@ function UpdateMedia() {
             let data = await getMediaFields(mediaData.description)
             setMediaFields(data)
             setLoading(false)
-          }
-          getMedia()
+        }
+        getMedia()
 
     }, [])
 
-   /* const handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -77,11 +78,12 @@ function UpdateMedia() {
                 category: categorySelected,
                 plan: planSelected
             }
+            console.log(dataForm)
             setMessage()
-            let data = await InsertMedias(dataForm)
+            let data = await UpdateMedias(dataForm, mediaData.id)
             if (data != 'fail') {
-                setMessage("Medio Insertado")
-                
+                setMessage("Medio Editado")
+
             } else {
                 setMessage("El Medio que intenta insertar ya existe")
                 setError(true)
@@ -90,104 +92,96 @@ function UpdateMedia() {
 
 
         }
-    }*/
-
-        const getPlan = async (value) => {
-            setLoading(true)
-            setPlanSelected(value)
-            let data = await getPlans(value)
-            setPlan(data)
-            setLoading(false)
-        }
-
-        const getCategory = async (value) => {
-            setLoading(true)
-            setCategorySelected(value)
-            let data = await getCategorys(value)
-            setCategory(data)
-            setLoading(false)
-        }
-
-
-
-        return (
-            <>
-                <Row>
-                    { planSelected == mediaData.planID ? 
-                    <Map image={"http://127.0.0.1:8000" + mediaData.planImage } setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
-                    : plan && <Map image={ plan.image } setCoordinadas={setCoordinadas}  />
-                    }
-                </Row>
-                <Container className="border mt-5">
-                    <Form className='mt-3' noValidate validated={validated}  >
-                        <Row>
-                            <Form.Group as={Col} md="4" controlId="validationCustom01">
-                                <Form.Label>Categoría</Form.Label>
-                                <Form.Select required value={mediaData.catDescription} onChange={e => getCategory(e.target.value)}>
-                                    <option  disabled value="">Seleccione la Categoría</option>
-                                    {categorys.map((category) => <option defaultValue={category.description == mediaData.catDescription && category.description } >{category.description}</option>)}
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="4" controlId="validationCustom02">
-                                <Form.Label>Plano</Form.Label>
-                                <Form.Select required  onChange={e => getPlan(e.target.value)} >
-                                    <option  disabled value="">Seleccione el Plano</option>
-                                    <option  selected value={mediaData.planID}>{mediaData.planDescription}</option>
-                                    {plans.map((plan) => plan.id != mediaData.planID && <option value={plan.id} >{plan.description}</option>)}
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">
-                                    Por favor seleccione el Mapa
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="4" controlId="validationCustom03">
-                                <Form.Label>Hereda</Form.Label>
-                                <Form.Select aria-label="Default select example" required>
-                                    <option selected disabled value="">Seleccione la Herencia </option>
-                                    <option >Si</option>
-                                    <option >No</option>
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">Por favor seleccione la Herencia</Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className='mt-3'>
-                            <Form.Group as={Col} md="4" controlId="validationCustom01">
-                                <Form.Label>Descripción</Form.Label>
-                                <Form.Control required type="text" value={mediaData.description} onChange={e => setDescription(e.target.value)} />
-                                <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
-                            </Form.Group>
-                            {mediaFields.length !=0 && mediaFields.map( (fields) => 
-                                <Form.Group as={Col} md="4" controlId="validationCustom01">
-                                <Form.Label>{fields.field.name}</Form.Label>
-                                 <Field value={fields.field.value}/>
-                                </Form.Group>
-                             )
-                               
-                               
-                            
-                            }
-
-                        </Row>
-                        <Row>
-                            <Col md={4}></Col>
-                            <Col md={4}><Button className="mb-3" type="submit" variant="outline-primary"><BsFillSaveFill /> Guardar</Button></Col>
-                        </Row>
-                    </Form>
-                    <Row className="mt-3" >
-                        <div style={{ textAlign: "center" }}>
-                            {loading && <Loading />}
-                        </div>
-
-                    </Row>
-                    {message && <Alert message={message} error={error}></Alert>}
-                    
-                    
-                    
-                </Container>
-                {mediaData.id}
-               
-            </>
-        );
     }
 
-    export default UpdateMedia;
+    const getPlan = async (value) => {
+        setLoading(true)
+        setPlanSelected(value)
+        let data = await getPlans(value)
+        setPlan(data)
+        setLoading(false)
+    }
+
+    const getCategory = async (value) => {
+        setLoading(true)
+        setCategorySelected(value)
+        let data = await getCategorys(value)
+        setCategory(data)
+        setLoading(false)
+    }
+
+
+
+    return (
+        <>
+            <Container className="border mt-5">
+                <Row>
+                    {planSelected == mediaData.planID ?
+                        <Map image={"http://127.0.0.1:8000" + mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
+                        : plan && <Map image={plan.image} setCoordinadas={setCoordinadas} />
+                    }
+                </Row>
+
+                <Form className='mt-3' noValidate validated={validated} onSubmit={handleSubmit} >
+                    <Row>
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                            <Form.Label>Categoría</Form.Label>
+                            <Form.Select required onChange={e => getCategory(e.target.value)}>
+                                <option disabled value="">Seleccione la Categoría</option>
+                                <option selected value={mediaData.catID}>{mediaData.catDescription}</option>
+                                {categorys.map((category) => category.id != mediaData.catID && <option value={category.id} >{category.description}</option>)}
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col} md="4" controlId="validationCustom02">
+                            <Form.Label>Plano</Form.Label>
+                            <Form.Select required onChange={e => getPlan(e.target.value)} >
+                                <option disabled value="">Seleccione el Plano</option>
+                                <option selected value={mediaData.planID}>{mediaData.planDescription}</option>
+                                {plans.map((plan) => plan.id != mediaData.planID && <option value={plan.id} >{plan.description}</option>)}
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">
+                                Por favor seleccione el Mapa
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group as={Col} md="4" controlId="validationCustom03">
+                            <Form.Label>Hereda</Form.Label>
+                            <Form.Select aria-label="Default select example" required>
+                                <option selected disabled value="">Seleccione la Herencia </option>
+                                <option >Si</option>
+                                <option >No</option>
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">Por favor seleccione la Herencia</Form.Control.Feedback>
+                        </Form.Group>
+                    </Row>
+                    <Row className='mt-3'>
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                            <Form.Label>Descripción</Form.Label>
+                            <Form.Control required type="text" defaultValue={mediaData.description} onChange={e => setDescription(e.target.value)} />
+                            <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
+                        </Form.Group>
+                        {mediaFields.length != 0 && mediaFields.map((fields) =>
+                            <Form.Group as={Col} md="4" controlId="validationCustom01">
+                                <Form.Label>{fields.field.name}</Form.Label>
+                                <Field value={fields.field.value} />
+                            </Form.Group>
+                        )
+                        }
+                    </Row>
+                    <Row>
+                        <Col md={4}></Col>
+                        <Col md={4}><Button className="mb-3" type="submit" variant="outline-primary"><BsFillSaveFill /> Guardar</Button></Col>
+                    </Row>
+                </Form>
+                <Row className="mt-3" >
+                    <div style={{ textAlign: "center" }}>
+                        {loading && <Loading />}
+                    </div>
+                </Row>
+                {message && <Alert message={message} error={error}></Alert>}
+            </Container>
+        </>
+    );
+}
+
+export default UpdateMedia;

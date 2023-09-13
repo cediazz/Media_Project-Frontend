@@ -16,13 +16,16 @@ import getPlans from "../PlanManagement/getPlans";
 import getCategorys from "../CategoryManagement/getCategorys";
 import Badge from 'react-bootstrap/Badge';
 import MyPagination from "../Pagination/Pagination";
+import delMedia from './deleteMedia'
+import Alert from '../Alert/Alert'
 
 
 export default function Media() {
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false)
   const [medias, setMedias] = useState([])
- 
+  const [message, setMessage] = useState()
+  const [error, setError] = useState(false)
   const [description, setDescription] = useState("")
   const [category, setCategory] = useState("")
   const [categorys, setCategorys] = useState([])
@@ -30,6 +33,7 @@ export default function Media() {
   const [plans, setPlans] = useState([])
   const [cantMedias, setCantMedias] = useState()
   const [pageCount, setPageCount] = useState(0);
+  const [del, setDel] = useState(false);
   const itemsPerPage = 2;
 
   useEffect(() => {
@@ -65,7 +69,7 @@ export default function Media() {
     }
     Medias()
 
-  }, [description, category, plan])
+  }, [description, category, plan,del])
 
 
   const handleSubmit = (event) => {
@@ -77,6 +81,19 @@ export default function Media() {
 
     setValidated(true);
   };
+
+  const deleteMedia = async (value) => {
+    setLoading(true)
+    setMessage()
+    let data = await delMedia(value)
+    setMessage("Medio eliminado")
+    let medias = await getMedias(1, description, category, plan)
+    setCantMedias(medias.count)
+    setPageCount(Math.ceil(medias.count / itemsPerPage))
+    setMedias(medias.results)
+    setDel(true)
+    setLoading(false)
+  }
 
  
 
@@ -122,7 +139,7 @@ export default function Media() {
       </Row>
       <Row>
         <Col md="12">
-          {cantMedias != 0 && <TableMedias data={medias}  />}
+          {cantMedias != 0 && <TableMedias data={medias} deleteMedia={deleteMedia} />}
         </Col>
       </Row>
       <Row>
@@ -145,8 +162,9 @@ export default function Media() {
           {loading && <Loading />}
         </div>
       </Row>
-      
+      {message && <Alert message={message} error={error}></Alert>}
     </Container>
+    
   );
 
 

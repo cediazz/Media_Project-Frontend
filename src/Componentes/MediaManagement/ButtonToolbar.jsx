@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
@@ -7,10 +8,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
+import ModalDeleteMedia from "../Modal/ModalDeleteMedia";
 
 function MyButtonToolbar(props) {
 
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false)
 
   const renderTooltipDelete = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -28,6 +31,7 @@ function MyButtonToolbar(props) {
 
 
   return (
+    <>
     <ButtonToolbar aria-label="Toolbar with button groups">
       <ButtonGroup className="me-2" aria-label="First group">
         <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltipEdit}>
@@ -37,6 +41,7 @@ function MyButtonToolbar(props) {
               state: {
                 description: props.mediaDescription,
                 id: props.mediaID,
+                catID: props.categoryID,
                 catDescription: props.categoryDescription,
                 planID: props.planID,
                 planDescription: props.planDescription,
@@ -50,10 +55,13 @@ function MyButtonToolbar(props) {
       </ButtonGroup>
       <ButtonGroup className="me-2" aria-label="Second group">
         <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay={renderTooltipDelete}>
-          <Button variant='danger'><BsFillTrashFill /></Button>
+          <Button variant='danger' onClick={() => setShowModal(true)}><BsFillTrashFill /></Button>
         </OverlayTrigger>
       </ButtonGroup>
     </ButtonToolbar>
+  {showModal == true && <ModalDeleteMedia deleteMedia={props.deleteMedia} mediaID={props.mediaID} setShowModal={setShowModal} />}
+  </>
+
   );
 }
 
