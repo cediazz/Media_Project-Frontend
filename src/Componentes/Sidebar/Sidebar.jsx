@@ -56,28 +56,19 @@ function Sidebar() {
           </button>
           <div className="collapse mt-1" id="dashboard-collapse1">
             <ListGroup >
-            <Link to="/gestionar-medios" className="link-dark rounded" style={{ textDecoration: "none" }}>
-              <ListGroup.Item action active={activeItem === "Gestionar Medios"} onClick={() => handleItemClick("Gestionar Medios")} >
-              <BsFillUsbDriveFill /> Gestionar Medios
+              <ListGroup.Item action active={activeItem === "Gestionar Medios"} onClick={() => { handleItemClick("Gestionar Medios"); navigate("/gestionar-medios") }} >
+                <BsFillUsbDriveFill /> Gestionar Medios
               </ListGroup.Item>
-              </Link>
-              <Link to="/gestionar-campos" className="link-dark rounded" style={{ textDecoration: "none" }}>
-              <ListGroup.Item action active={activeItem === "Gestionar Campos"} onClick={() => handleItemClick("Gestionar Campos")} >
-               <BsFillHddStackFill /> Gestionar Campos
+              <ListGroup.Item action active={activeItem === "Gestionar Campos"} onClick={() => { handleItemClick("Gestionar Campos"); navigate("/gestionar-campos") }} >
+                <BsFillHddStackFill /> Gestionar Campos
               </ListGroup.Item>
-              </Link>
-              <Link to="/gestionar-planos" className="link-dark rounded" style={{ textDecoration: "none" }}>
-              <ListGroup.Item action active={activeItem === "Gestionar Planos"} onClick={() => handleItemClick("Gestionar Planos")} >
+              <ListGroup.Item action active={activeItem === "Gestionar Planos"} onClick={() => { handleItemClick("Gestionar Planos"); navigate("/gestionar-planos") }} >
                 <BsMapFill /> Gestionar Planos
               </ListGroup.Item>
-              </Link>
-              
-              <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => {handleItemClick("Gestionar Categorías") ; navigate("/gestionar-categoria")}} >
+              <ListGroup.Item action active={activeItem === "Gestionar Categorías"} onClick={() => { handleItemClick("Gestionar Categorías"); navigate("/gestionar-categoria") }} >
                 <BsFillFileEarmarkFill /> Gestionar Categorías
               </ListGroup.Item>
-              
             </ListGroup>
-
           </div>
         </li>
         <li className="mb-1">

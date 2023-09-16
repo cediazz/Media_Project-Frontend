@@ -1,4 +1,4 @@
-export default async function getAllMedias(description=""){
+export default async function getAllMediaFields(description="",category="",plan=""){
    
     let token = localStorage.getItem('access') ? localStorage.getItem('access') : ''
     let data = null
@@ -11,7 +11,7 @@ export default async function getAllMedias(description=""){
            //'Authorization': `Bearer ${token}`
           }
         }
-        let res = await fetch(`http://127.0.0.1:8000/Media/?description=${description}`, config)
+        let res = await fetch(`http://127.0.0.1:8000/Media/get_media_fields/?description=${description}&category__description=${category}&plan__description=${plan}`, config)
         data = await res.json()
         console.log(data)
        /* if(res.status == 401){

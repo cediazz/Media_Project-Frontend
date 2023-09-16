@@ -6,7 +6,6 @@ import { BsFillTrashFill } from 'react-icons/bs';
 import { BsPencilSquare } from 'react-icons/bs';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import ModalDeleteMedia from "../Modal/ModalDeleteMedia";
 

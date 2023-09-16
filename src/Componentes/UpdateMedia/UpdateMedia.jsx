@@ -163,7 +163,7 @@ function UpdateMedia() {
                         {mediaFields.length != 0 && mediaFields.map((fields) =>
                             <Form.Group as={Col} md="4" controlId="validationCustom01">
                                 <Form.Label>{fields.field.name}</Form.Label>
-                                <Field value={fields.field.value} />
+                                <Field value={fields.field.value} idField={fields.field.id} />
                             </Form.Group>
                         )
                         }

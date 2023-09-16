@@ -1,20 +1,21 @@
-export default async function getAllMedias(description=""){
+export default async function LinkFieldMedias(dataForm){
    
     let token = localStorage.getItem('access') ? localStorage.getItem('access') : ''
     let data = null
     try {
       let config = {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
            //'Authorization': `Bearer ${token}`
-          }
+          },
+          body:JSON.stringify(dataForm)
         }
-        let res = await fetch(`http://127.0.0.1:8000/Media/?description=${description}`, config)
+        let res = await fetch(`http://127.0.0.1:8000/Media-Field/post_media_field_view/`, config)
         data = await res.json()
         console.log(data)
-       /* if(res.status == 401){
+        /* if(res.status == 401){
           console.log("401")
           let refresToken = localStorage.getItem('refresh') ? localStorage.getItem('refresh') : ''
           let res = await fetch(`http://127.0.0.1:8000/refresh-token/`,{
@@ -38,7 +39,7 @@ export default async function getAllMedias(description=""){
            }
         }*/
         } catch (error) {
-        console.log(error);
+        //console.log(error);
         data = error
       }
     return data
