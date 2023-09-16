@@ -25,7 +25,7 @@ export default function Field(props) {
           <Button variant="primary" onClick={() => setShowModal(true)} ><BsPencilSquare /></Button>
         </OverlayTrigger>
       </InputGroup>
-      {showModal == true && <ModalLinkFieldMedia fieldID={props.idField}  setShowModal={setShowModal} />}
+      {showModal == true && <ModalLinkFieldMedia fieldID={props.idField} fieldName={props.name} fieldValue={props.value} setShowModal={setShowModal} />}
     </>
 
 

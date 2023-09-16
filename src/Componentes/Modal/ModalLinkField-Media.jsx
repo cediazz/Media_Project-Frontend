@@ -20,7 +20,7 @@ function ModalLinkFieldMedia(props) {
     const [medias, setMedias] = useState([])
     const [loading, setLoading] = useState(false)
     const [description, setDescription] = useState("")
-    const [mediaID, setMediaID] = useState()
+    const [mediaDescription, setMediaDescription] = useState()
     const [message, setMessage] = useState()
     const [error, setError] = useState(false)
 
@@ -45,14 +45,8 @@ function ModalLinkFieldMedia(props) {
     const LinkFieldMedia = async () => {
         setLoading(true)
         setMessage()
-        let dataForm = { media: mediaID, field: props.fieldID }
-        let data = await LinkFieldMedias(dataForm)
-        if(data.non_field_errors) {
-            console.log("ERRORRR")
-            setError(true)
-            setMessage("El campo que intenta vincular al Medio ya están vinculados")
-        }
-        else
+        let dataForm = {name: props.fieldName, value: props.fieldValue, link: mediaDescription}
+        let data = await LinkFieldMedias(dataForm,props.fieldID)
         setMessage("Campo y Medio vinculados")
         setLoading(false)
 
@@ -87,9 +81,9 @@ function ModalLinkFieldMedia(props) {
                                     <Form.Check
                                         type="radio"
                                         name="group1"
-                                        value={media.id}
+                                        value={media.description}
                                         label={media.description}
-                                        onChange={(e) => setMediaID(e.target.value)}
+                                        onChange={(e) => setMediaDescription(e.target.value)}
                                     />
                                 </Col>)}
                         </Row>

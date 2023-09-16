@@ -1,10 +1,10 @@
-export default async function LinkFieldMedias(dataForm){
+export default async function LinkFieldMedias(dataForm,fieldID){
    
     let token = localStorage.getItem('access') ? localStorage.getItem('access') : ''
     let data = null
     try {
       let config = {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export default async function LinkFieldMedias(dataForm){
           },
           body:JSON.stringify(dataForm)
         }
-        let res = await fetch(`http://127.0.0.1:8000/Media-Field/post_media_field_view/`, config)
+        let res = await fetch(`http://127.0.0.1:8000/Fields/${fieldID}/`, config)
         data = await res.json()
         console.log(data)
         /* if(res.status == 401){
