@@ -14,11 +14,13 @@ import Loading from "../Loading/Loading";
 import Map from '../Map/Map'
 import getAllMediaFields from "./getAllMediaFields";
 import ViewMediaMap from "../Map/ViewMediaMap";
+import MediasLink from "./getMediasLink";
 
 export default function PlanView() {
   const [validated, setValidated] = useState(false);
   const [plans, setPlans] = useState([])
   const [plan, setPlan] = useState()
+  const [planDescription, setPlanDescription] = useState("Seleccione el Plano")
   const [categorys, setCategorys] = useState([])
   const [category, setCategory] = useState("")
   const [description, setDescription] = useState("")
@@ -55,29 +57,52 @@ export default function PlanView() {
     }
     Medias()
 
-  }, [description, category, plan])
+  }, [])
 
 
   const getPlan = async (value) => {
     setLoading(true)
+    setMedias([])
     let data = await getPlans(value)
     setPlan(data)
+    setLoading(false)
+  }
+
+  const getMediasLink = async (description1,description2) => {
+    setLoading(true)
+    setDescription("")
+    setCategory("")
+    let data = await MediasLink(description1,description2)
+    setMedias(data)
+    data.map( (media) => {
+      media.plan.description != plan.description && setPlan(media.plan); 
+      media.plan.description != plan.description && setMedias([media])
+    } )
     setLoading(false)
   }
 
 
 
 
-
-
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
+      
       event.stopPropagation();
+      setValidated(true);
+    }
+    else{
+      const Medias = async () => {
+        setLoading(true)
+        let data = await getAllMediaFields(description, category, plan.description)
+        setMedias(data)
+        setLoading(false)
+      }
+      Medias()
     }
 
-    setValidated(true);
+    
   };
 
   return (
@@ -90,19 +115,19 @@ export default function PlanView() {
         </Row>
         <Row >
           <Form.Group as={Col} md="3" controlId="validationCustom01">
-            <Form.Control required type="text" onChange={(e) => setDescription(e.target.value)}/>
+            <Form.Control  type="text" onChange={(e) => setDescription(e.target.value)}/>
             <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="3" controlId="validationCustom02">
-            <Form.Select aria-label="Default select example" required onChange={e => setCategory(e.target.value)}>
-              <option selected value="">Ninguno </option>
+            <Form.Select aria-label="Default select example"  onChange={e => setCategory(e.target.value)}>
+              <option selected value="">Todas </option>
               {categorys.map((category) => <option value={category.description}>{category.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="3" controlId="validationCustom03">
-            <Form.Select aria-label="Default select example" required onChange={e => getPlan(e.target.value)}>
-              <option selected disabled value="">Seleccione el plano </option>
+            <Form.Select aria-label="Default select example" value={plan && plan.description} required onChange={e => getPlan(e.target.value)}>
+              <option selected  value="">Seleccione el plano </option>
               {plans.map((plan) => <option value={plan.id}>{plan.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">
@@ -111,7 +136,7 @@ export default function PlanView() {
           </Form.Group>
           <Form.Group as={Col} md="3" controlId="validationCustom03">
 
-            <Button className="mb-3" type="submit" variant="primary"><BsSearch /></Button>
+            <Button className="mb-3" type="submit" variant="primary"><BsSearch /> Buscar Medios</Button>
           </Form.Group>
         </Row>
       </Form>
@@ -121,7 +146,7 @@ export default function PlanView() {
         </div>
       </Row>
       <Row className="mt-3 mb-3">
-        {plan && <ViewMediaMap image={plan.image} medias={medias} />}
+        {plan && <ViewMediaMap image={plan.image} medias={medias}  getMediasLink={getMediasLink} />}
       </Row>
     </Container>
   );

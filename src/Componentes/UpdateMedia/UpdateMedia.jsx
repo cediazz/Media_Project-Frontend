@@ -117,7 +117,7 @@ function UpdateMedia() {
             <Container className="border mt-5">
                 <Row>
                     {planSelected == mediaData.planID ?
-                        <Map image={"http://127.0.0.1:8000" + mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
+                        <Map image={mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
                         : plan && <Map image={plan.image} setCoordinadas={setCoordinadas} />
                     }
                 </Row>
