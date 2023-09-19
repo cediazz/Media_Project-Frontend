@@ -20,7 +20,7 @@ export default function PlanView() {
   const [validated, setValidated] = useState(false);
   const [plans, setPlans] = useState([])
   const [plan, setPlan] = useState()
-  const [planDescription, setPlanDescription] = useState("Seleccione el Plano")
+  const [planDescription, setPlanDescription] = useState("")
   const [categorys, setCategorys] = useState([])
   const [category, setCategory] = useState("")
   const [description, setDescription] = useState("")
@@ -57,7 +57,7 @@ export default function PlanView() {
     }
     Medias()
 
-  }, [])
+  }, [description,category])
 
 
   const getPlan = async (value) => {
@@ -65,6 +65,7 @@ export default function PlanView() {
     setMedias([])
     let data = await getPlans(value)
     setPlan(data)
+    if (plan )setPlanDescription(plan.description)
     setLoading(false)
   }
 
@@ -126,8 +127,8 @@ export default function PlanView() {
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="3" controlId="validationCustom03">
-            <Form.Select aria-label="Default select example" value={plan && plan.description} required onChange={e => getPlan(e.target.value)}>
-              <option selected  value="">Seleccione el plano </option>
+            <Form.Select aria-label="Default select example"   required onChange={e => getPlan(e.target.value)}>
+              <option selected disabled value="">Seleccione el plano </option>
               {plans.map((plan) => <option value={plan.id}>{plan.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">
@@ -146,6 +147,7 @@ export default function PlanView() {
         </div>
       </Row>
       <Row className="mt-3 mb-3">
+        {plan && <h3>Plano: {plan.description}</h3> }
         {plan && <ViewMediaMap image={plan.image} medias={medias}  getMediasLink={getMediasLink} />}
       </Row>
     </Container>

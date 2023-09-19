@@ -52,20 +52,27 @@ function InsertMedia() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setMessage()
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
         }
+        else if (coordinadas == undefined){
+        setMessage("Seleccione las coordenadas en el mapa")
+        setError(true)
+        }
         else {
             setLoading(true)
+            setMessage()
+            setError(false)
             let dataForm = {
                 coordinadas: { lat: coordinadas.lat, lng: coordinadas.lng },
                 description: description,
                 category: categorySelected,
                 plan: planSelected
             }
-            setMessage()
+            
             let data = await InsertMedias(dataForm)
             if (data != 'fail') {
                 setMessage("Medio Insertado")

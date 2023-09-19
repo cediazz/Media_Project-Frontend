@@ -19,7 +19,7 @@ export default function LocationMarker(props) {
     
      return position === null ? null : (
       <Marker position={position} icon={customIcon}>
-        <Popup>estoy aqui</Popup>
+        
       </Marker>
     )
   }
