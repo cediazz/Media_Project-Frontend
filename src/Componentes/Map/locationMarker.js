@@ -4,7 +4,7 @@ import {Marker,Popup,useMapEvents } from 'react-leaflet'
 import { customIcon } from "./Icon"
 
 export default function LocationMarker(props) {
-    const [position, setPosition] = useState(props.coordinadas || null)
+    const [position, setPosition] = useState(null)
     
     useMapEvents({
         click(e) {
@@ -18,7 +18,7 @@ export default function LocationMarker(props) {
       });
     
      return position === null ? null : (
-      <Marker position={position} icon={customIcon}>
+      <Marker position={props.coordinadas ? props.coordinadas : position} icon={customIcon}>
         
       </Marker>
     )

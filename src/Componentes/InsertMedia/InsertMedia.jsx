@@ -12,6 +12,9 @@ import getPlans from "../PlanManagement/getPlans";
 import getCategorys from "../CategoryManagement/getCategorys";
 import Map from '../Map/Map'
 import InsertMedias from './insertMedia';
+import { useNavigate } from 'react-router-dom';
+import getAllMedias from '../FieldsManagement/getAllMedias';
+import getAllMediaFields from '../Plan/getAllMediaFields';
 
 function InsertMedia() {
 
@@ -25,8 +28,12 @@ function InsertMedia() {
     const [categorySelected, setCategorySelected] = useState("Seleccione la Categoría")
     const [coordinadas, setCoordinadas] = useState()
     const [description, setDescription] = useState()
+    const [medias, setMedias] = useState([])
+    const [mediaFatherID, setMediaFatherID] = useState()
+    const [planFather, setPlanFather] = useState()
     const [message, setMessage] = useState()
     const [error, setError] = useState(false)
+    const navigate = useNavigate();
 
 
 
@@ -48,6 +55,14 @@ function InsertMedia() {
         }
         Categorys()
 
+        const Medias = async () => {
+            setLoading(true)
+            let data = await getAllMedias()
+            setMedias(data)
+            setLoading(false)
+          }
+          Medias()
+
     }, [])
 
     const handleSubmit = async (event) => {
@@ -58,9 +73,9 @@ function InsertMedia() {
             event.stopPropagation();
             setValidated(true);
         }
-        else if (coordinadas == undefined){
-        setMessage("Seleccione las coordenadas en el mapa")
-        setError(true)
+        else if (coordinadas == undefined) {
+            setMessage("Seleccione las coordenadas en el mapa")
+            setError(true)
         }
         else {
             setLoading(true)
@@ -72,7 +87,7 @@ function InsertMedia() {
                 category: categorySelected,
                 plan: planSelected
             }
-            
+
             let data = await InsertMedias(dataForm)
             if (data != 'fail') {
                 setMessage("Medio Insertado")
@@ -92,6 +107,7 @@ function InsertMedia() {
         setPlanSelected(value)
         let data = await getPlans(value)
         setPlan(data)
+        setPlanFather()
         setLoading(false)
     }
 
@@ -103,13 +119,26 @@ function InsertMedia() {
         setLoading(false)
     }
 
+    const getMediaFather = async (value) => {
+        setLoading(true)
+        let data = await getAllMediaFields(value)
+        setMediaFatherID(data[0].id)
+        setPlanSelected(data[0].plan.id)
+        if (data[0].coordinadas)
+        setCoordinadas({lat:data[0].coordinadas.lat , lng:data[0].coordinadas.lng})
+        setPlanFather(data[0].plan)
+        setPlan()
+        setLoading(false)
+    }
+
 
 
     return (
         <>
             <Container className="border mt-5">
                 <Row>
-                    {plan && <Map image={plan.image} setCoordinadas={setCoordinadas} />}
+                    {plan != undefined ? <Map image={plan.image} setCoordinadas={setCoordinadas} />
+                    : planFather && <Map image={planFather.image} setCoordinadas={setCoordinadas} coordinadas={coordinadas}/>}
                 </Row>
 
                 <Form className='mt-3' noValidate validated={validated} onSubmit={handleSubmit}>
@@ -133,11 +162,10 @@ function InsertMedia() {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustom03">
-                            <Form.Label>Hereda</Form.Label>
-                            <Form.Select aria-label="Default select example" required>
-                                <option selected disabled value="">Seleccione la Herencia </option>
-                                <option >Si</option>
-                                <option >No</option>
+                            <Form.Label>Hereda(Opcional)</Form.Label>
+                            <Form.Select onChange={e => getMediaFather(e.target.value)} >
+                                <option selected disabled value="">No</option>
+                                {medias.map((medias) => <option value={medias.description}>{medias.description}</option>)}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">Por favor seleccione la Herencia</Form.Control.Feedback>
                         </Form.Group>
@@ -148,11 +176,38 @@ function InsertMedia() {
                             <Form.Control required type="text" onChange={e => setDescription(e.target.value)} />
                             <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                            <Form.Label>Adicionarle un Medio(Opcional)</Form.Label>
+                            <Form.Select aria-label="Default select example" >
+                                <option selected disabled value="">Seleccione el Medio </option>
+                                {medias.map((medias) => <option value={medias.id}>{medias.description}</option>)}
+                            </Form.Select>
+                        </Form.Group>
 
                     </Row>
-                    <Row>
+                    <Row className='mt-5'>
                         <Col md={4}></Col>
-                        <Col md={4}><Button className="mb-3" type="submit" variant="outline-primary"><BsFillSaveFill /> Guardar</Button></Col>
+                        <Col md={4}>
+                        <div className="d-grid gap-2">
+                            <Button className="mb-3"  variant="info"> Adicionar Medio</Button>
+                        </div>
+                        </Col>
+                        <Col md={4}></Col>
+
+                    </Row>
+                    <Row className='mt-5'>
+                       
+                        <Col md={6}>
+                            <div className="d-grid gap-2">
+                                <Button className="mb-3" onClick={()=> navigate("/gestionar-medios")} variant="danger">Cancelar</Button>
+                            </div>
+                        </Col>
+
+                        <Col md={6}>
+                            <div className="d-grid gap-2">
+                                <Button className="mb-3" type="submit" variant="primary"><BsFillSaveFill /> Guardar</Button>
+                            </div>
+                        </Col>
                     </Row>
                 </Form>
                 <Row className="mt-3" >
@@ -162,6 +217,8 @@ function InsertMedia() {
 
                 </Row>
                 {message && <Alert message={message} error={error}></Alert>}
+                {planSelected && planSelected}
+                {coordinadas && coordinadas.lat}
             </Container>
 
         </>
