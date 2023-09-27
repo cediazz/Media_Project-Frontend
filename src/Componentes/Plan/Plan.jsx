@@ -15,6 +15,7 @@ import Map from '../Map/Map'
 import getAllMediaFields from "./getAllMediaFields";
 import ViewMediaMap from "../Map/ViewMediaMap";
 import MediasLink from "./getMediasLink";
+import getAllMediaFieldsSons from "./getAllMediaFieldsSons";
 
 export default function PlanView() {
   const [validated, setValidated] = useState(false);
@@ -25,6 +26,7 @@ export default function PlanView() {
   const [category, setCategory] = useState("")
   const [description, setDescription] = useState("")
   const [medias, setMedias] = useState([])
+  const [mediaSons,setMediaSons] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function PlanView() {
 
     const Medias = async () => {
       setLoading(true)
+      setMediaSons([])
       let data = await getAllMediaFields(description, category, plan.description)
       setMedias(data)
       setLoading(false)
@@ -73,6 +76,7 @@ export default function PlanView() {
     setLoading(true)
     setDescription("")
     setCategory("")
+    //setMediaSons([])
     let data = await MediasLink(description1,description2)
     setMedias(data)
     data.map( (media) => {
@@ -94,10 +98,14 @@ export default function PlanView() {
       setValidated(true);
     }
     else{
+      //setMediaSons([])
       const Medias = async () => {
         setLoading(true)
+        let media_sons = await getAllMediaFieldsSons(description, category, plan.description)
+        setMediaSons(media_sons)
         let data = await getAllMediaFields(description, category, plan.description)
         setMedias(data)
+        
         setLoading(false)
       }
       Medias()
@@ -148,7 +156,7 @@ export default function PlanView() {
       </Row>
       <Row className="mt-3 mb-3">
         {plan && <h3>Plano: {plan.description}</h3> }
-        {plan && <ViewMediaMap image={plan.image} medias={medias}  getMediasLink={getMediasLink} />}
+        {plan && <ViewMediaMap image={plan.image} medias={medias}  getMediasLink={getMediasLink} setMedias={setMedias} mediaSons={mediaSons} setMediaSons={setMediaSons}/>}
       </Row>
     </Container>
   );
