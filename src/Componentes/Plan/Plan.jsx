@@ -53,7 +53,8 @@ export default function PlanView() {
 
     const Medias = async () => {
       setLoading(true)
-      setMediaSons([])
+      let media_sons = await getAllMediaFieldsSons(description, category, plan.description)
+      setMediaSons(media_sons)
       let data = await getAllMediaFields(description, category, plan.description)
       setMedias(data)
       setLoading(false)
@@ -76,10 +77,13 @@ export default function PlanView() {
     setLoading(true)
     setDescription("")
     setCategory("")
-    //setMediaSons([])
+    let media_sons1 = await getAllMediaFieldsSons(description1, category, "")
+    let media_sons2 = await getAllMediaFieldsSons(description2, category, "")
+    setMediaSons([media_sons1[0],media_sons2[0]])
     let data = await MediasLink(description1,description2)
     setMedias(data)
     data.map( (media) => {
+      media.plan.description != plan.description && setMediaSons(media_sons2)
       media.plan.description != plan.description && setPlan(media.plan); 
       media.plan.description != plan.description && setMedias([media])
     } )

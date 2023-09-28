@@ -28,7 +28,7 @@ export default function ViewMediaLocationMarker(props) {
 
   return (
     <Marker position={props.mediaData.coordinadas || null} icon={customIcon}>
-      <Tooltip direction="top" offset={[-15, -28]} >
+      <Tooltip direction="top" offset={[-15, -28]} permanent >
         {props.mediaData.description}
       </Tooltip>
 
@@ -48,7 +48,8 @@ export default function ViewMediaLocationMarker(props) {
                   {media_field.field.link != "" ?
                     <a
                       onClick={() => props.getMediasLink(props.mediaData.description, media_field.field.link)}
-                      href="#">{media_field.field.value}
+                      href="#">
+                        {media_field.field.value}
                     </a>
                     : media_field.field.value
                   }
@@ -62,7 +63,7 @@ export default function ViewMediaLocationMarker(props) {
                   </a>
                 </h6>
               }
-              {props.mediaSons.length != 0 && props.mediaSons[0].son_containers.map((son) =>
+              {props.mediaSons[0] && props.mediaSons[0].son_containers.map((son) =>
                 <h6>Contiene a :
                   <a onClick={() => Medias(son.son.description)}
                     href="#"

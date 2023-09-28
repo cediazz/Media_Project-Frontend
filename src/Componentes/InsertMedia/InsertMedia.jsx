@@ -15,6 +15,7 @@ import InsertMedias from './insertMedia';
 import { useNavigate } from 'react-router-dom';
 import getAllMedias from '../FieldsManagement/getAllMedias';
 import getAllMediaFields from '../Plan/getAllMediaFields';
+import getMediasExclude from '../../Utils/getMediasExclude';
 
 function InsertMedia() {
 
@@ -29,7 +30,9 @@ function InsertMedia() {
     const [coordinadas, setCoordinadas] = useState()
     const [description, setDescription] = useState()
     const [medias, setMedias] = useState([])
+    const [mediasExclude, setMediasExclude] = useState([])
     const [mediaFatherID, setMediaFatherID] = useState()
+    const [mediaSonID, setMediaSonID] = useState()
     const [planFather, setPlanFather] = useState()
     const [message, setMessage] = useState()
     const [error, setError] = useState(false)
@@ -65,6 +68,14 @@ function InsertMedia() {
         }
         Medias()
 
+        const MediasExclude = async () => {
+            setLoading(true)
+            let data = await getMediasExclude()
+            setMediasExclude(data)
+            setLoading(false)
+        }
+        MediasExclude()
+
     }, [])
 
     const handleSelectPlanChange = (value) => {
@@ -93,6 +104,10 @@ function InsertMedia() {
             setMessage("Seleccione las coordenadas en el mapa")
             setError(true)
         }
+        else if (mediaFatherID == mediaSonID){
+            setMessage("Seleccione Medios distintos")
+            setError(true)
+        }
         else {
             setLoading(true)
             setMessage()
@@ -102,7 +117,8 @@ function InsertMedia() {
                 description: description,
                 category: categorySelected,
                 plan: planSelected,
-                mediaFatherId:mediaFatherID
+                mediaFatherId:mediaFatherID,
+                mediaSonId: mediaSonID
             }
             console.log(dataForm)
 
@@ -207,9 +223,9 @@ function InsertMedia() {
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
                             <Form.Label>Adicionarle un Medio(Opcional)</Form.Label>
-                            <Form.Select aria-label="Default select example" >
+                            <Form.Select onChange={ (e) => setMediaSonID(e.target.value) } >
                                 <option selected disabled value="">Seleccione el Medio </option>
-                                {medias.map((medias) => <option value={medias.id}>{medias.description}</option>)}
+                                {mediasExclude.map((medias) => <option value={medias.id}>{medias.description}</option>)}
                             </Form.Select>
                         </Form.Group>
 
