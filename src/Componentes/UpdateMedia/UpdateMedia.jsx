@@ -15,6 +15,10 @@ import { useLocation } from 'react-router-dom';
 import getMediaFields from './getMediaFields';
 import Field from '../Fields/Fields';
 import UpdateMedias from './updateMedia';
+import { useNavigate } from 'react-router-dom';
+import getAllMediaFieldsSons from '../Plan/getAllMediaFieldsSons';
+import FieldMediaSon from '../Fields/FieldsMediaSon';
+
 
 function UpdateMedia() {
 
@@ -33,7 +37,8 @@ function UpdateMedia() {
     const [categorySelected, setCategorySelected] = useState(mediaData.catID)
     const [description, setDescription] = useState(mediaData.description)
     const [coordinadas, setCoordinadas] = useState(mediaData.coordinadas)
-
+    const [mediaSons, setMediaSons] = useState([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         const Plans = async () => {
@@ -60,6 +65,14 @@ function UpdateMedia() {
             setLoading(false)
         }
         getMedia()
+
+        const MediasSons = async () => {
+            setLoading(true)
+            let media_sons = await getAllMediaFieldsSons(mediaData.description, "", "")
+            setMediaSons(media_sons)
+            setLoading(false)
+        }
+        MediasSons()
 
     }, [])
 
@@ -117,8 +130,15 @@ function UpdateMedia() {
             <Container className="border mt-5">
                 <Row>
                     {planSelected == mediaData.planID ?
-                        <Map image={mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
-                        : plan && <Map image={plan.image} setCoordinadas={setCoordinadas} />
+                        <div>
+                            <h3>Plano: {mediaData.planDescription}</h3>
+                            <Map image={mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
+                        </div>
+                        : plan &&
+                        <div>
+                            <h3>Plano: {plan.description}</h3>
+                            <Map image={plan.image} setCoordinadas={setCoordinadas} />
+                        </div>
                     }
                 </Row>
 
@@ -136,8 +156,8 @@ function UpdateMedia() {
                         <Form.Group as={Col} md="4" controlId="validationCustom02">
                             <Form.Label>Plano</Form.Label>
                             <Form.Select required onChange={e => getPlan(e.target.value)} >
-                                <option disabled value="">Seleccione el Plano</option>
-                                <option selected value={mediaData.planID}>{mediaData.planDescription}</option>
+                                <option disabled selected value="">Seleccione el Plano</option>
+                                {/*<option selected value={mediaData.planID}>{mediaData.planDescription}</option>*/}
                                 {plans.map((plan) => plan.id != mediaData.planID && <option value={plan.id} >{plan.description}</option>)}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">
@@ -169,10 +189,30 @@ function UpdateMedia() {
                         }
                     </Row>
                     <Row>
-                        <Col md={4}></Col>
-                        <Col md={4}><Button className="mb-3" type="submit" variant="outline-primary"><BsFillSaveFill /> Guardar</Button></Col>
+                        {mediaSons[0] != undefined && 
+                        <div style={{backgroundColor:"GrayText"}} className="border text-center mt-3 mb-3 pt-1">
+                            <h6 className='fw-bold'>CONTIENE</h6>
+                        </div>}
+                        {mediaSons[0] != undefined &&  mediaSons[0].son_containers.map((son) =>
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                          <FieldMediaSon  value={son.son.description} />
+                        </Form.Group>
+                    )}
+                 </Row>
+                    <Row className='mt-5'>
+                        <Col md={6}>
+                            <div className="d-grid gap-2">
+                                <Button className="mb-3" onClick={() => navigate("/gestionar-medios")} variant="danger">Cancelar</Button>
+                            </div>
+                        </Col>
+                        <Col md={6}>
+                            <div className="d-grid gap-2">
+                                <Button className="mb-3" type="submit" variant="primary"><BsFillSaveFill /> Guardar</Button>
+                            </div>
+                        </Col>
                     </Row>
                 </Form>
+
                 <Row className="mt-3" >
                     <div style={{ textAlign: "center" }}>
                         {loading && <Loading />}

@@ -128,7 +128,7 @@ function InsertMedia() {
                 
 
             } else {
-                setMessage("El Medio que intenta insertar ya existe")
+                setMessage("El Medio que intenta insertar ya existe, seleccione otra descripción")
                 setError(true)
             }
             setLoading(false)
@@ -170,6 +170,7 @@ function InsertMedia() {
             setPlanFather(data[0].plan)
             setLoading(false)
         }
+        else setMediaFatherID()
     }
 
 
@@ -222,9 +223,10 @@ function InsertMedia() {
                             <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
-                            <Form.Label>Adicionarle un Medio(Opcional)</Form.Label>
-                            <Form.Select onChange={ (e) => setMediaSonID(e.target.value) } >
+                            <Form.Label>Adicionarle un Medio</Form.Label>
+                            <Form.Select required onChange={ (e) => setMediaSonID(e.target.value) } >
                                 <option selected disabled value="">Seleccione el Medio </option>
+                                <option  value="">No</option>
                                 {mediasExclude.map((medias) => <option value={medias.id}>{medias.description}</option>)}
                             </Form.Select>
                         </Form.Group>
@@ -249,8 +251,10 @@ function InsertMedia() {
                     </div>
 
                 </Row>
-                {message && <Alert message={message} error={error}></Alert>}
+                
+                
             </Container>
+            <Row>{message && <Alert message={message} error={error}></Alert>}</Row>
         </>
     );
 }
