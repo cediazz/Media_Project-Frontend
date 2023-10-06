@@ -12,7 +12,7 @@ export default async function InsertField(dataForm){
           },
           body:JSON.stringify(dataForm)
         }
-        let res = await fetch(`http://127.0.0.1:8000/Media-Field/`, config)
+        let res = await fetch(`http://127.0.0.1:8000/Fields/`, config)
         if(res.status == 400){
           data = "fail"
         }

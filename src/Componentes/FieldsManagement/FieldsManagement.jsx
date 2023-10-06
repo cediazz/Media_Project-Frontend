@@ -11,27 +11,28 @@ import Alert from '../Alert/Alert'
 import Field from "../Fields/Fields";
 import getAllMedias from "./getAllMedias";
 import InsertField from "./insertField";
-
+import getCategorys from "../CategoryManagement/getCategorys";
 
 export default function FieldsManagement() {
   const [validated, setValidated] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [mediaSelected, setMediaSelected] = useState("Seleccione el Medio")
-  const [medias, setMedias] = useState([])
+  const [categorySelected, setCategorySelected] = useState("Seleccione la Categoría")
+  const [categorys, setCategorys] = useState([])
   const [nameField, setNameField] = useState()
-  const [valueField, setValueField] = useState()
   const [message, setMessage] = useState()
   const [error, setError] = useState(false)
 
   useEffect(() => {
 
-    const Medias = async () => {
+    const Categorys = async () => {
       setLoading(true)
-      let data = await getAllMedias()
-      setMedias(data)
+      let data = await getCategorys()
+      setCategorys(data)
       setLoading(false)
-    }
-    Medias()
+
+  }
+  Categorys()
+
 
   }, [])
 
@@ -46,8 +47,8 @@ export default function FieldsManagement() {
     else {
       setLoading(true)
       let dataForm = {
-        field: { name: nameField, value: valueField },
-        media: mediaSelected
+        name: nameField,
+        category: categorySelected
       }
       setMessage()
       let data = await InsertField(dataForm)
@@ -85,25 +86,21 @@ export default function FieldsManagement() {
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} md="4" controlId="validationCustom01">
             <Form.Label>Seleccione el Medio</Form.Label>
-            <Form.Select required onChange={e => setMediaSelected(e.target.value)}>
-              <option selected disabled value="">Seleccione el Medio</option>
-              {medias.map((medias) => <option value={medias.id}>{medias.description}</option>)}
+            <Form.Select required onChange={e => setCategorySelected(e.target.value)}>
+              <option selected disabled value="">Seleccione la Categoría</option>
+              {categorys.map((category) => <option value={category.id}>{category.description}</option>)}
             </Form.Select>
             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
           </Form.Group>
 
-          {mediaSelected != "Seleccione el Medio" &&
+          {categorySelected != "Seleccione la Categoría" &&
             <>
               <Form.Group as={Col} md="4" controlId="validationCustom02">
                 <Form.Label>Nombre del Campo</Form.Label>
                 <Form.Control type="text" required onChange={e => setNameField(e.target.value)} />
                 <Form.Control.Feedback type="invalid">Por favor introduzca el nombre</Form.Control.Feedback>
               </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationCustom03">
-                <Form.Label>Valor del Campo</Form.Label>
-                <Form.Control type="text" required onChange={e => setValueField(e.target.value)} />
-                <Form.Control.Feedback type="invalid">Por favor introduzca el valor</Form.Control.Feedback>
-              </Form.Group>
+            
             </>
           }
 

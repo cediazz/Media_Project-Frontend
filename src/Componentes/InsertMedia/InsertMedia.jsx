@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import getAllMedias from '../FieldsManagement/getAllMedias';
 import getAllMediaFields from '../Plan/getAllMediaFields';
 import getMediasExclude from '../../Utils/getMediasExclude';
+import Field from '../Fields/Fields';
 
 function InsertMedia() {
 
@@ -39,6 +40,7 @@ function InsertMedia() {
     const [selectPlanEnabled, setSelectPlanEnabled] = useState(true);
     const [selectPlanFatherEnabled, setSelectPlanFatherEnabled] = useState(false);
     const navigate = useNavigate();
+    const [fields, setFields] = useState([])
 
 
 
@@ -104,10 +106,10 @@ function InsertMedia() {
             setMessage("Seleccione las coordenadas en el mapa")
             setError(true)
         }
-        else if (mediaFatherID == mediaSonID){
+        /*else if (mediaFatherID == mediaSonID) {
             setMessage("Seleccione Medios distintos")
             setError(true)
-        }
+        }*/
         else {
             setLoading(true)
             setMessage()
@@ -117,20 +119,21 @@ function InsertMedia() {
                 description: description,
                 category: categorySelected,
                 plan: planSelected,
-                mediaFatherId:mediaFatherID,
-                mediaSonId: mediaSonID
+                mediaFatherId: mediaFatherID,
+                mediaSonId: mediaSonID,
+                fields: fields
             }
             console.log(dataForm)
 
-           let data = await InsertMedias(dataForm)
+            /*let data = await InsertMedias(dataForm)
             if (data != 'fail') {
                 setMessage("Medio Insertado")
-                
+
 
             } else {
                 setMessage("El Medio que intenta insertar ya existe, seleccione otra descripción")
                 setError(true)
-            }
+            }*/
             setLoading(false)
 
 
@@ -210,11 +213,19 @@ function InsertMedia() {
                                 <Form.Label>Insertar dentro de otro Medio</Form.Label>
                                 <Form.Select required onChange={e => { getMediaFather(e.target.value); handleSelectPlanFatherChange(e.target.value) }} >
                                     <option selected disabled value="">Seleccione el Medio</option>
-                                    <option  value="No">No</option>
+                                    <option value="No">No</option>
                                     {medias.map((medias) => <option value={medias.description}>{medias.description}</option>)}
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">Por favor seleccione el Medio</Form.Control.Feedback>
                             </Form.Group>}
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                            <Form.Label>Adicionarle un Medio</Form.Label>
+                            <Form.Select required onChange={(e) => e.target.value != "No" ? setMediaSonID(e.target.value) : setMediaSonID(undefined)} >
+                                <option selected disabled value="">Seleccione el Medio </option>
+                                <option value="">No</option>
+                                {mediasExclude.map((medias) => <option value={medias.id}>{medias.description}</option>)}
+                            </Form.Select>
+                        </Form.Group>
                     </Row>
                     <Row className='mt-3'>
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
@@ -222,14 +233,11 @@ function InsertMedia() {
                             <Form.Control required type="text" onChange={e => setDescription(e.target.value)} />
                             <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group as={Col} md="4" controlId="validationCustom01">
-                            <Form.Label>Adicionarle un Medio</Form.Label>
-                            <Form.Select required onChange={ (e) => setMediaSonID(e.target.value) } >
-                                <option selected disabled value="">Seleccione el Medio </option>
-                                <option  value="">No</option>
-                                {mediasExclude.map((medias) => <option value={medias.id}>{medias.description}</option>)}
-                            </Form.Select>
-                        </Form.Group>
+                        {category && category.fields.map((field) =>
+                            <Form.Group as={Col} md="4" controlId="validationCustom01">
+                                <Form.Label>{field.name}</Form.Label>
+                                <Field  id={field.id} fields={fields} setFields={setFields} />
+                            </Form.Group>)}
 
                     </Row>
                     <Row className='mt-5'>
@@ -251,8 +259,8 @@ function InsertMedia() {
                     </div>
 
                 </Row>
-                
-                
+
+
             </Container>
             <Row>{message && <Alert message={message} error={error}></Alert>}</Row>
         </>
