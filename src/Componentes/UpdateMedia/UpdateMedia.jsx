@@ -38,6 +38,7 @@ function UpdateMedia() {
     const [description, setDescription] = useState(mediaData.description)
     const [coordinadas, setCoordinadas] = useState(mediaData.coordinadas)
     const [mediaSons, setMediaSons] = useState([])
+    const [fields, setFields] = useState({})
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -183,7 +184,13 @@ function UpdateMedia() {
                         {mediaFields.length != 0 && mediaFields.map((fields) =>
                             <Form.Group as={Col} md="4" controlId="validationCustom01">
                                 <Form.Label>{fields.field.name}</Form.Label>
-                                <Field name={fields.field.name} value={fields.field.value} idField={fields.field.id} />
+                                <Field 
+                                name={fields.field.name} 
+                                value={fields.field_value} 
+                                idField={fields.field.id}
+                                fields={fields} 
+                                setFields={setFields} 
+                                />
                             </Form.Group>
                         )
                         }

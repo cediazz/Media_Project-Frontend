@@ -64,14 +64,14 @@ export default function ViewMediaLocationMarker(props) {
                   <div>
                     <span>
                       {media_field.field.name}:
-                      {media_field.field.link != "" ?
+                      {media_field.link_media != "" ?
                         <a
                           class="text-decoration-none"
-                          onClick={() => props.getMediasLink(props.mediaData.description, media_field.field.link)}
+                          onClick={() => props.getMediasLink(props.mediaData.description, media_field.link_media)}
                           href="#">
-                          {media_field.field.value}
+                          {media_field.field_value}
                         </a>
-                        : media_field.field.value
+                        : media_field.field_value
                       }
                     </span></div>
 

@@ -42,14 +42,9 @@ function ModalLinkFieldMedia(props) {
 
     }, [description])
 
-    const LinkFieldMedia = async () => {
-        setLoading(true)
-        setMessage()
-        let dataForm = {name: props.fieldName, value: props.fieldValue, link: mediaDescription}
-        let data = await LinkFieldMedias(dataForm,props.fieldID)
-        setMessage("Campo y Medio vinculados")
-        setLoading(false)
-
+    const LinkFieldMedia =  () => {
+       props.setLink(mediaDescription)
+       setMessage("Enlace a Medio Creado")
     }
 
     return (

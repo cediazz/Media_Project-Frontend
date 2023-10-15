@@ -40,7 +40,9 @@ function InsertMedia() {
     const [selectPlanEnabled, setSelectPlanEnabled] = useState(true);
     const [selectPlanFatherEnabled, setSelectPlanFatherEnabled] = useState(false);
     const navigate = useNavigate();
-    const [fields, setFields] = useState([])
+    const [fields, setFields] = useState({})
+   
+
 
 
 
@@ -121,11 +123,12 @@ function InsertMedia() {
                 plan: planSelected,
                 mediaFatherId: mediaFatherID,
                 mediaSonId: mediaSonID,
-                fields: fields
+                fields: fields,
+                
             }
             console.log(dataForm)
 
-            /*let data = await InsertMedias(dataForm)
+            let data = await InsertMedias(dataForm)
             if (data != 'fail') {
                 setMessage("Medio Insertado")
 
@@ -133,7 +136,7 @@ function InsertMedia() {
             } else {
                 setMessage("El Medio que intenta insertar ya existe, seleccione otra descripción")
                 setError(true)
-            }*/
+            }
             setLoading(false)
 
 
@@ -236,9 +239,10 @@ function InsertMedia() {
                         {category && category.fields.map((field) =>
                             <Form.Group as={Col} md="4" controlId="validationCustom01">
                                 <Form.Label>{field.name}</Form.Label>
-                                <Field  id={field.id} fields={fields} setFields={setFields} />
-                            </Form.Group>)}
-
+                                <Field id={field.id} fields={fields} setFields={setFields}  />
+                               
+                            </Form.Group>
+                        )}
                     </Row>
                     <Row className='mt-5'>
                         <Col md={6}>
