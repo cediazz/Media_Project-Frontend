@@ -18,7 +18,9 @@ import UpdateMedias from './updateMedia';
 import { useNavigate } from 'react-router-dom';
 import getAllMediaFieldsSons from '../Plan/getAllMediaFieldsSons';
 import FieldMediaSon from '../Fields/FieldsMediaSon';
-
+import getMediasExclude from '../../Utils/getMediasExclude';
+import getAllMedias from '../FieldsManagement/getAllMedias';
+import getAllMediaFields from '../Plan/getAllMediaFields';
 
 function UpdateMedia() {
 
@@ -26,19 +28,24 @@ function UpdateMedia() {
     const [loading, setLoading] = useState(false)
     const [plan, setPlan] = useState()
     const [plans, setPlans] = useState([])
-    const [category, setCategory] = useState()
-    const [categorys, setCategorys] = useState([])
     const [message, setMessage] = useState()
     const [error, setError] = useState(false)
     const location = useLocation();
-    const [mediaData, setMediaData] = useState(location.state || {})
+    const [mediaData, setMediaData] = useState(location.state)
     const [mediaFields, setMediaFields] = useState([])
-    const [planSelected, setPlanSelected] = useState(mediaData.planID)
-    const [categorySelected, setCategorySelected] = useState(mediaData.catID)
-    const [description, setDescription] = useState(mediaData.description)
-    const [coordinadas, setCoordinadas] = useState(mediaData.coordinadas)
+    const [planSelected, setPlanSelected] = useState(location.state.planID)
+    const [categorySelected, setCategorySelected] = useState(location.state.catID)
+    const [description, setDescription] = useState(location.state.description)
+    const [coordinadas, setCoordinadas] = useState(location.state.coordinadas)
     const [mediaSons, setMediaSons] = useState([])
     const [fields, setFields] = useState({})
+    const [selectPlanEnabled, setSelectPlanEnabled] = useState(true);
+    const [selectPlanFatherEnabled, setSelectPlanFatherEnabled] = useState(false);
+    const [medias, setMedias] = useState([])
+    const [mediasExclude, setMediasExclude] = useState([])
+    const [mediaFatherID, setMediaFatherID] = useState()
+    const [mediaSonID, setMediaSonID] = useState()
+    const [planFather, setPlanFather] = useState()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,14 +57,7 @@ function UpdateMedia() {
 
         }
         Plans()
-        const Categorys = async () => {
-            setLoading(true)
-            let data = await getCategorys()
-            setCategorys(data)
-            setLoading(false)
-
-        }
-        Categorys()
+        
 
         const getMedia = async () => {
             setLoading(true)
@@ -66,6 +66,22 @@ function UpdateMedia() {
             setLoading(false)
         }
         getMedia()
+
+        const Medias = async () => {
+            setLoading(true)
+            let data = await getAllMedias()
+            setMedias(data)
+            setLoading(false)
+        }
+        Medias()
+
+        const MediasExclude = async () => {
+            setLoading(true)
+            let data = await getMediasExclude()
+            setMediasExclude(data)
+            setLoading(false)
+        }
+        MediasExclude()
 
         const MediasSons = async () => {
             setLoading(true)
@@ -76,6 +92,20 @@ function UpdateMedia() {
         MediasSons()
 
     }, [])
+
+    const handleSelectPlanChange = (value) => {
+        if (value == "No") {
+            setSelectPlanEnabled(false);
+            setSelectPlanFatherEnabled(true);
+        }
+    };
+
+    const handleSelectPlanFatherChange = (value) => {
+        if (value == "No") {
+            setSelectPlanEnabled(true);
+            setSelectPlanFatherEnabled(false);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -90,11 +120,14 @@ function UpdateMedia() {
                 coordinadas: { lat: coordinadas.lat, lng: coordinadas.lng },
                 description: description,
                 category: categorySelected,
-                plan: planSelected
+                plan: planSelected,
+                mediaFatherId: mediaFatherID,
+                mediaSonId: mediaSonID,
+                fields: fields,
             }
             console.log(dataForm)
             setMessage()
-            let data = await UpdateMedias(dataForm, mediaData.id)
+            let data = await UpdateMedias(dataForm, location.state.id)
             if (data != 'fail') {
                 setMessage("Medio Editado")
 
@@ -103,43 +136,61 @@ function UpdateMedia() {
                 setError(true)
             }
             setLoading(false)
-
+            navigate("/gestionar-medios")
+                            
 
         }
     }
 
     const getPlan = async (value) => {
-        setLoading(true)
-        setPlanSelected(value)
-        let data = await getPlans(value)
-        setPlan(data)
-        setLoading(false)
+        if (value != "No") {
+            setLoading(true)
+            setMediaData()
+            setMediaFatherID()
+            setPlanFather()
+            setCoordinadas()
+            setPlanSelected(value)
+            let data = await getPlans(value)
+            setPlan(data)
+            setLoading(false)
+        }
     }
 
-    const getCategory = async (value) => {
-        setLoading(true)
-        setCategorySelected(value)
-        let data = await getCategorys(value)
-        setCategory(data)
-        setLoading(false)
+
+    const getMediaFather = async (value) => {
+        if (value != "No") {
+            setLoading(true)
+            setPlan()
+            setMediaData()
+            let data = await getAllMediaFields(value)
+            setMediaFatherID(data[0].id)
+            
+            setPlanSelected(data[0].plan.id)
+            if (data[0].coordinadas)
+                setCoordinadas({ lat: data[0].coordinadas.lat, lng: data[0].coordinadas.lng })
+            setPlanFather(data[0].plan)
+            setLoading(false)
+        }
+        else setMediaFatherID()
     }
 
-
+//Arreglar variable mediaData problemas al seleccionar otro plano
 
     return (
         <>
             <Container className="border mt-5">
                 <Row>
-                    {planSelected == mediaData.planID ?
+                    {mediaData != undefined ?
                         <div>
-                            <h3>Plano: {mediaData.planDescription}</h3>
+                           <h3>Plano: {mediaData.planDescription}</h3>
                             <Map image={mediaData.planImage} setCoordinadas={setCoordinadas} coordinadas={mediaData.coordinadas} />
                         </div>
-                        : plan &&
+                        : plan ?
                         <div>
                             <h3>Plano: {plan.description}</h3>
                             <Map image={plan.image} setCoordinadas={setCoordinadas} />
                         </div>
+                        : planFather && <Map image={planFather.image} setCoordinadas={setCoordinadas} coordinadas={coordinadas} />
                     }
                 </Row>
 
@@ -147,47 +198,54 @@ function UpdateMedia() {
                     <Row>
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
                             <Form.Label>Categoría</Form.Label>
-                            <Form.Select required onChange={e => getCategory(e.target.value)}>
-                                <option disabled value="">Seleccione la Categoría</option>
-                                <option selected value={mediaData.catID}>{mediaData.catDescription}</option>
-                                {categorys.map((category) => category.id != mediaData.catID && <option value={category.id} >{category.description}</option>)}
-                            </Form.Select>
+                            <Form.Control required type="text" disabled defaultValue={location.state.catDescription}  />
                             <Form.Control.Feedback type="invalid">Por favor seleccione la Categoría</Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group as={Col} md="4" controlId="validationCustom02">
-                            <Form.Label>Plano</Form.Label>
-                            <Form.Select required onChange={e => getPlan(e.target.value)} >
-                                <option disabled selected value="">Seleccione el Plano</option>
-                                {/*<option selected value={mediaData.planID}>{mediaData.planDescription}</option>*/}
-                                {plans.map((plan) => plan.id != mediaData.planID && <option value={plan.id} >{plan.description}</option>)}
+                        {selectPlanEnabled &&
+                            <Form.Group as={Col} md="4" controlId="validationCustom02">
+                                <Form.Label>Plano</Form.Label>
+                                <Form.Select required onChange={e => { getPlan(e.target.value); handleSelectPlanChange(e.target.value) }} >
+                                    
+                                    <option value="No">No</option>
+                                    {plans.map((plan) => <option selected={plan.id == location.state.planID} value={plan.id}>{plan.description}</option>)}
+                                </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                    Por favor seleccione el Mapa
+                                </Form.Control.Feedback>
+                            </Form.Group>}
+                        {selectPlanFatherEnabled &&
+                            <Form.Group as={Col} md="4" controlId="validationCustom03">
+                                <Form.Label>Insertar dentro de otro Medio</Form.Label>
+                                <Form.Select required onChange={e => { getMediaFather(e.target.value); handleSelectPlanFatherChange(e.target.value) }} >
+                                    <option selected disabled value="">Seleccione el Medio</option>
+                                    <option value="No">No</option>
+                                    {medias.map((medias) => medias.description != location.state.description && <option value={medias.description}>{medias.description}</option>)}
+                                </Form.Select>
+                                <Form.Control.Feedback type="invalid">Por favor seleccione el Medio</Form.Control.Feedback>
+                            </Form.Group>}
+                        <Form.Group as={Col} md="4" controlId="validationCustom01">
+                            <Form.Label>Adicionarle un Medio</Form.Label>
+                            <Form.Select required onChange={(e) => e.target.value != "No" ? setMediaSonID(e.target.value) : setMediaSonID(undefined)} >
+                                <option selected disabled >Seleccione el Medio </option>
+                                <option value="No">No</option>
+                                {mediasExclude.map((medias) => medias.description != location.state.description && <option value={medias.id}>{medias.description}</option>)}
                             </Form.Select>
-                            <Form.Control.Feedback type="invalid">
-                                Por favor seleccione el Mapa
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group as={Col} md="4" controlId="validationCustom03">
-                            <Form.Label>Hereda</Form.Label>
-                            <Form.Select aria-label="Default select example" required>
-                                <option selected disabled value="">Seleccione la Herencia </option>
-                                <option >Si</option>
-                                <option >No</option>
-                            </Form.Select>
-                            <Form.Control.Feedback type="invalid">Por favor seleccione la Herencia</Form.Control.Feedback>
                         </Form.Group>
                     </Row>
                     <Row className='mt-3'>
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
                             <Form.Label>Descripción</Form.Label>
-                            <Form.Control required type="text" defaultValue={mediaData.description} onChange={e => setDescription(e.target.value)} />
+                            <Form.Control required type="text" defaultValue={location.state.description} onChange={e => setDescription(e.target.value)} />
                             <Form.Control.Feedback type="invalid">Por favor introduzca la Descripción</Form.Control.Feedback>
                         </Form.Group>
-                        {mediaFields.length != 0 && mediaFields.map((fields) =>
+                        {mediaFields.length != 0 && mediaFields.map((field) =>
                             <Form.Group as={Col} md="4" controlId="validationCustom01">
-                                <Form.Label>{fields.field.name}</Form.Label>
+                                <Form.Label>{field.field.name}</Form.Label>
                                 <Field 
-                                name={fields.field.name} 
-                                value={fields.field_value} 
-                                idField={fields.field.id}
+                                name={field.field.name} 
+                                value={field.field_value} 
+                                id={field.field.id}
+                                idMediaField={field.id}
                                 fields={fields} 
                                 setFields={setFields} 
                                 />

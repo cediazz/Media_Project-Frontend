@@ -22,7 +22,7 @@ export default function Field(props) {
   const pushFields = (value) => {
     //props.setFields([])
     //props.setFields([...props.fields, {id: props.id, value:inputValue}])
-    props.setFields({ ...props.fields, [props.id]: {value: inputValue, link:link} })
+    props.setFields({ ...props.fields, [props.id]: {value: inputValue, link:link,idMediaField:props.idMediaField }})
     //setInputValue('');
   }
 
@@ -47,7 +47,7 @@ export default function Field(props) {
       </InputGroup>
       {showModal == true && 
       <ModalLinkFieldMedia 
-      fieldID={props.idField} 
+      fieldID={props.id} 
       fieldName={props.name} 
       fieldValue={props.value} 
       setShowModal={setShowModal} 

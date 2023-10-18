@@ -42,10 +42,6 @@ function InsertMedia() {
     const navigate = useNavigate();
     const [fields, setFields] = useState({})
    
-
-
-
-
     useEffect(() => {
         const Plans = async () => {
             setLoading(true)
@@ -224,8 +220,8 @@ function InsertMedia() {
                         <Form.Group as={Col} md="4" controlId="validationCustom01">
                             <Form.Label>Adicionarle un Medio</Form.Label>
                             <Form.Select required onChange={(e) => e.target.value != "No" ? setMediaSonID(e.target.value) : setMediaSonID(undefined)} >
-                                <option selected disabled value="">Seleccione el Medio </option>
-                                <option value="">No</option>
+                                <option selected disabled >Seleccione el Medio </option>
+                                <option value="No">No</option>
                                 {mediasExclude.map((medias) => <option value={medias.id}>{medias.description}</option>)}
                             </Form.Select>
                         </Form.Group>
